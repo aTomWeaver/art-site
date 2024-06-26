@@ -1,25 +1,11 @@
 * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+    /* line-height: 0; */
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* POETRY MARKUP LANGUAGE */
 .poem-container {
     display: flex;
     flex-direction: column;
-    width: 800px;
+    width: 500px;
 }
 
 .stanza {

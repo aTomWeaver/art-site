@@ -1,95 +1,49 @@
-import Image from "next/image";
 import styles from "./page.module.css";
+import { StanzaDict, getMetaAndContent } from "./lib/parser";
+import { cutive_mono } from "@/app/fonts";
+
+interface StanzaProps {
+    lines: string[],
+    classes: string[]
+}
+
+interface PoemProps {
+    stanzaDict: StanzaDict
+}
+
+
+const Stanza = ({lines, classes}: StanzaProps) => {
+    const classList = classes.join(' ');
+    return (
+        <div className={`stanza ${classList}`}>
+        {lines.map((line, index) => <p dangerouslySetInnerHTML={{__html: line}} key={index}></p>)}
+        </div>
+    )
+}
+
+const Poem = ({stanzaDict}: PoemProps) => {
+    return (
+        <div className={`poem-container ${cutive_mono.className}`}>
+            {Object.keys(stanzaDict).map((key) => (
+                <Stanza key={key} lines={stanzaDict[key].lines} classes={stanzaDict[key].classes} />
+            ))}
+        </div>
+    )
+}
+
 
 export default function Home() {
+    const poem_name = 'newer_poem'
+    const PATH = `/Users/tom/Code/websites/art-site/public/poems/src/${poem_name}.pml`
+    const [meta, poem] = getMetaAndContent(PATH);
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+        <div className={styles.metablock}>
+            <h1>{meta.title}</h1>
+            <p>By {meta.by}</p>
+            <p>{meta.date}</p>
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+        <Poem stanzaDict={poem} />
     </main>
   );
 }
